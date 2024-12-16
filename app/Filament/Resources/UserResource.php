@@ -18,12 +18,32 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $label = 'Data User';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\FileUpload::make('avatar_url')
+                    ->label('')
+                    ->avatar(),
+                Forms\Components\TextInput::make('name')
+                    ->label('nama')
+                    ->required()
+                    ->minLength(3)
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->required(),
+                Forms\Components\Select::make('role')
+                    ->options([
+                        'operator' => 'Operator',
+                        'admin' => 'Admin'
+                    ])
+                    ->required(),
+                Forms\Components\TextInput::make('password')
+                    ->required()
+                    ->password()
+                    ->revealable(),
             ]);
     }
 
@@ -31,7 +51,11 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\ImageColumn::make('avatar_url')->circular(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('email')->searchable(),
+                Tables\Columns\TextColumn::make('role')->searchable(),
+                Tables\Columns\TextColumn::make('created_at')->searchable(),
             ])
             ->filters([
                 //
